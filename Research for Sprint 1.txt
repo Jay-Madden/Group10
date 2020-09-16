@@ -1,0 +1,13 @@
+https://vuejs.org/
+
+- Did research about our front end technology.
+
+https://cli.vuejs.org/
+
+- Downloaded and installed vue client to see webpage on local machine
+
+https://nodejs.org/en/
+
+- Downloaded and installed node.js framework to be able to work on the webpages
+
+Created rough ERD to be used to start our database. We intent to update it as we go.
