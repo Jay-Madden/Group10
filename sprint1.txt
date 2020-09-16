@@ -1,0 +1,6 @@
+What I did for Sprint 1
+1. Created a C# enviroment using Jetbrains Rider
+2. Created a JS enviroment using Jetbrains Webstorm
+3. Did the Vue.js hello world tutorial inside of Webstorm
+4. Messed around with Rider and how it worked with C#
+5. Created a button in Vue.js
