@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 namespace Group10.Data.Models
 {
-    using Models;
-
     public class Sponsor
     {
         public int Id { get; set; }
@@ -13,9 +11,9 @@ namespace Group10.Data.Models
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
 
-        public List<Driver> Drivers {get; set;}
+        public List<Driver> Drivers { get; set; }
 
-        public int CatalogId {get; set;}
-        public Catalog Catalog {get; set;}
+        public int CatalogId { get; set; }
+        public Catalog Catalog { get; set; }
     }
 }
