@@ -30,8 +30,7 @@ namespace Group10.API
         {
             services.AddControllers();
             services.AddDbContext<Group10Context>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("Group10ConnectionString"), 
-                    builder => builder.MigrationsAssembly(typeof(Group10Context).Assembly.FullName)));
+                options.UseNpgsql(Configuration["Group10ConnectionString"]));
         }
 
             // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

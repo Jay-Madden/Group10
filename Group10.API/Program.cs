@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Group10.Data.Contexts;
 
 namespace Group10.API
 {
@@ -21,7 +22,7 @@ namespace Group10.API
             Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-                    config.AddJsonFile("appsettings.Local.json");
+                    config.AddUserSecrets<Group10Context>();
                     config.AddEnvironmentVariables();
 
                     if (args != null)

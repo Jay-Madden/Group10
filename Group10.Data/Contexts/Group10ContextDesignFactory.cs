@@ -11,12 +11,11 @@ namespace Group10.Data.Contexts
         public Group10Context CreateDbContext(string[] args)
         {
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile($"{Directory.GetCurrentDirectory()}/../Group10.API/appsettings.Local.json")
+                .AddUserSecrets<Group10Context>()
                 .Build();
 
             var builder = new DbContextOptionsBuilder<Group10Context>();
-            builder.UseNpgsql(configuration.GetConnectionString("Group10ConnectionString"));
+            builder.UseNpgsql(configuration["Group10ConnectionString"]);
             
             return new Group10Context(builder.Options);
         }

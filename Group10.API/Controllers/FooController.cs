@@ -26,7 +26,7 @@ namespace Group10.API.Controllers
         [HttpGet]
         public async Task<Foo> Get()
         {
-            await _context.AddAsync(new Claims() {Id = 1, Claim = "test"});
+            await _context.AddAsync(new Catalog() {Id = 1, Name = "test"});
             await _context.SaveChangesAsync();
             return new Foo { bar = 4 };
         }
