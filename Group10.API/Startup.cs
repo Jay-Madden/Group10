@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace Group10.API
 {
+    using Data.Contexts;
+    using Microsoft.EntityFrameworkCore;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -26,10 +29,13 @@ namespace Group10.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDbContext<Group10Context>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("Group10ConnectionString"), 
+                    builder => builder.MigrationsAssembly(typeof(Group10Context).Assembly.FullName)));
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+            // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Group10Context context)
         {
             if (env.IsDevelopment())
             {
@@ -43,6 +49,8 @@ namespace Group10.API
             {
                 endpoints.MapControllers();
             });
+            
+            context.Database.Migrate();
         }
     }
 }
