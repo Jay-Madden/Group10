@@ -7,6 +7,6 @@ namespace Group10.Data.Models
     {
         public int Id { get; set; }
         public int Name { get; set; }
-        public string Email { get; set; }
+        public string Email { get; set; } = null!;
     }
 }

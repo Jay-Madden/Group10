@@ -6,9 +6,9 @@ namespace Group10.Data.Models
     public class Order
     {
         public int Id { get; set; }
-        public List<Product> Products { get; set; }
+        public List<Product> Products { get; set; } = null!;
 
         public int DriverId { get; set; }
-        public Driver Driver { get; set; }
+        public Driver Driver { get; set; } = null!;
     }
 }
