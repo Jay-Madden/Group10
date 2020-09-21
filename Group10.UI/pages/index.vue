@@ -1,5 +1,10 @@
 <template>
-  <h1>Hello world</h1>
+  <v-col>
+    <h1>{{ counter }}</h1>
+    <p>
+      <v-btn @click="counter += 1"></v-btn>
+    </p>
+  </v-col>
 </template>
 
 <script>
