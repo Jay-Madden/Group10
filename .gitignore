@@ -501,3 +501,31 @@ npm-debug.log
 yarn-error.log
 
 # End of https://www.toptal.com/developers/gitignore/api/csharp,aspnetcore,dotnetcore,vuejs
+
+
+# Created by https://www.toptal.com/developers/gitignore/api/nuxt,nuxtjs
+# Edit at https://www.toptal.com/developers/gitignore?templates=nuxt,nuxtjs
+
+### Nuxt ###
+# gitignore template for Nuxt.js projects
+#
+# Recommended template: Node.gitignore
+
+# Nuxt build
+.nuxt
+
+# Nuxt generate
+dist
+
+### Nuxtjs ###
+# dependencies
+node_modules
+
+# logs
+npm-debug.log
+
+# Nuxt build
+
+# Nuxt generate
+
+# End of https://www.toptal.com/developers/gitignore/api/nuxt,nuxtjs
