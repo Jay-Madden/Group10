@@ -1,0 +1,8 @@
+What I did for Sprint 2
+
+- Continued development on our ERD
+- Setup my local development system completely
+- Setup my local database using postgresql
+- Watched tutorials on ASP and .NET framework
+- Watched tutorials on C#
+- Watched tutorials on PostgreSQL 
