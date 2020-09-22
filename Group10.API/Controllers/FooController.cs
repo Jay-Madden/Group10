@@ -4,11 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Group10.Data.Contexts;
+using Group10.Data.Models;
+
 
 namespace Group10.API.Controllers
 {
-    using Data.Contexts;
-    using Data.Models;
 
     [ApiController]
     [Route("[controller]")]
