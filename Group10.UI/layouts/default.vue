@@ -1,7 +1,6 @@
 <template>
-  <v-app dark>
+  <v-app>
     <v-main>
-      <div>Testing div</div>
       <nuxt />
     </v-main>
   </v-app>

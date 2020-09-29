@@ -1,0 +1,24 @@
+.center {
+    margin: auto;
+    padding: 325px 0;
+  }
+
+.text-md-center {
+    text-align: center;
+}
+
+a{
+  color: #000000
+}
+
+.container {
+  position: relative;
+}
+
+.vertical-center {
+  position: relative;
+}
+
+.center-card {
+  margin: auto;
+}
