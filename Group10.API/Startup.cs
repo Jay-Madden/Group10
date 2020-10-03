@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Group10.Data.Contexts;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Group10.API
 {
@@ -29,8 +30,19 @@ namespace Group10.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            
             services.AddDbContext<Group10Context>(options =>
                 options.UseNpgsql(Configuration["Group10ConnectionString"]));
+            
+            services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = "https://localhost:5002";
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
+                });
         }
 
             // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +55,7 @@ namespace Group10.API
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {

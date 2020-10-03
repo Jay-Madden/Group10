@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Group10.Data.Contexts;
 using Group10.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Group10.API.Controllers
@@ -13,6 +14,7 @@ namespace Group10.API.Controllers
 
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class FooController : ControllerBase
     {
         private readonly ILogger<FooController> _logger;
