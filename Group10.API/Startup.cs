@@ -34,6 +34,7 @@ namespace Group10.API
             services.AddDbContext<Group10Context>(options =>
                 options.UseNpgsql(Configuration["Group10ConnectionString"]));
             
+            
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
@@ -43,6 +44,20 @@ namespace Group10.API
                         ValidateAudience = false
                     };
                 });
+            
+            /*
+            services.AddCors(options =>
+            {
+                // this defines a CORS policy called "default"
+                options.AddPolicy("default", policy =>
+                {
+                    policy.WithOrigins("https://localhost:5003")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+            */
+
         }
 
             // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,7 +70,7 @@ namespace Group10.API
 
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseAuthentication();
+            //app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {

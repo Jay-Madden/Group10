@@ -1,4 +1,4 @@
-import colors from 'vuetify/es5/util/colors'
+import colors from 'vuetify/es5/util/colors';
 
 export default {
   // Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
@@ -33,14 +33,45 @@ export default {
     '@nuxtjs/vuetify',
   ],
 
+
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: [],
+  modules: [
+    '@nuxt/http',
+    '@nuxtjs/auth'
+  ],
+
+  http: {
+    proxy: true,
+  },
+  proxy: ['http://localhost:5000/api'],
+
+  router: {
+    middleware: ['auth']
+  },
+  auth: {
+    strategies: {
+      IdentityServer: {
+        _scheme: 'oauth2',
+        authorization_endpoint: 'http://localhost:5002/connect/authorize',
+        userinfo_endpoint: "https://localhost:5002/connect/userinfo",
+        scope: ['Group10Api'],
+        access_type: 'offline',
+        access_token_endpoint: undefined,
+        response_type: 'token',
+        token_type: 'Bearer',
+        redirect_uri: '/login',
+        client_id: 'Group10',
+        scope: 'Admin',
+        token_key: 'access_token',
+      }
+    }
+  },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,
@@ -57,4 +88,4 @@ export default {
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
-}
+};

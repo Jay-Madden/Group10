@@ -13,7 +13,7 @@ namespace Group10.API.Controllers
 {
 
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [Authorize]
     public class FooController : ControllerBase
     {
