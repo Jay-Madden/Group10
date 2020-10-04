@@ -1,6 +1,6 @@
 .center {
     margin: auto;
-    padding: 325px 0;
+    padding: 250px 0;
   }
 
 .text-md-center {
@@ -21,4 +21,10 @@ a{
 
 .center-card {
   margin: auto;
+}
+
+.center-image{
+  display:flex;
+  justify-content:center; 
+  align-items:center;
 }
