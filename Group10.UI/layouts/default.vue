@@ -2,9 +2,6 @@
   <v-app>
     <v-main>
       <nuxt />
-    </v-main> 
+    </v-main>
   </v-app>
 </template>
-
-
-

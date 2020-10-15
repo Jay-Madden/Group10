@@ -1,5 +1,9 @@
 import colors from 'vuetify/es5/util/colors';
-
+module.exports = {
+  configureWebpack: {
+    devtool: 'source-map',
+  },
+};
 export default {
   // Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
   ssr: false,
@@ -33,12 +37,8 @@ export default {
     '@nuxtjs/vuetify',
   ],
 
-
   // Modules (https://go.nuxtjs.dev/config-modules)
-  modules: [
-    '@nuxt/http',
-    '@nuxtjs/auth'
-  ],
+  modules: ['@nuxt/http', '@nuxtjs/axios', '@nuxtjs/auth'],
 
   http: {
     proxy: true,
@@ -46,25 +46,34 @@ export default {
   proxy: ['http://localhost:5000/api'],
 
   router: {
-    middleware: ['auth']
+    middleware: ['auth'],
   },
+
   auth: {
+    plugins: ['~/plugins/auth.js'],
     strategies: {
-      IdentityServer: {
-        _scheme: 'oauth2',
-        authorization_endpoint: 'http://localhost:5002/connect/authorize',
-        userinfo_endpoint: "https://localhost:5002/connect/userinfo",
-        scope: ['Group10Api'],
-        access_type: 'offline',
-        access_token_endpoint: undefined,
-        response_type: 'token',
-        token_type: 'Bearer',
-        redirect_uri: '/login',
-        client_id: 'Group10',
-        scope: 'Admin',
-        token_key: 'access_token',
-      }
-    }
+      local: {
+        endpoints: {
+          login: {
+            url: '/api/account/login',
+            method: 'post',
+            propertyName: 'token',
+          },
+          user: {
+            url: '/api/account/user',
+            method: 'get',
+            propertyName: 'user',
+          },
+          logout: false,
+        },
+        tokenRequired: true,
+        tokenType: 'Bearer',
+      },
+      google: {
+        client_id:
+          process.env.GOOGLE_CLIENT_ID,
+      },
+    },
   },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
     <UserSecretsId>363d562b-00f4-4502-b203-4333a6cfaa55</UserSecretsId>
   </PropertyGroup>
 
@@ -11,6 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Oauth2.v2" Version="1.49.0.1869" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.0-rc.1.20451.17" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.0-rc.1.20451.17" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0-rc.1.20451.14" />
   </ItemGroup>

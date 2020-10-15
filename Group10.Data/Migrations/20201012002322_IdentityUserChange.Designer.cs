@@ -3,15 +3,17 @@ using System;
 using Group10.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Group10.Data.Migrations
 {
     [DbContext(typeof(Group10Context))]
-    partial class Group10ContextModelSnapshot : ModelSnapshot
+    [Migration("20201012002322_IdentityUserChange")]
+    partial class IdentityUserChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,10 +28,6 @@ namespace Group10.Data.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
-
-                    b.Property<string>("AuthId")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -101,6 +99,27 @@ namespace Group10.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Catalogs");
+                });
+
+            modelBuilder.Entity("Group10.Data.Models.Claims", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<string>("Claim")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("DriverId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DriverId");
+
+                    b.ToTable("Claims");
                 });
 
             modelBuilder.Entity("Group10.Data.Models.Driver", b =>
@@ -365,6 +384,17 @@ namespace Group10.Data.Migrations
                     b.HasIndex("ProductsId");
 
                     b.ToTable("OrderProduct");
+                });
+
+            modelBuilder.Entity("Group10.Data.Models.Claims", b =>
+                {
+                    b.HasOne("Group10.Data.Models.Driver", "Driver")
+                        .WithMany()
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Driver");
                 });
 
             modelBuilder.Entity("Group10.Data.Models.Driver", b =>

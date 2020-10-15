@@ -29,14 +29,14 @@
             rounded="true"
             color="#858988"
             class="mr-4"
-            @click="validate"
+            @click="login"
           >
             Submit
           </v-btn>
         </v-flex>
 
         <v-flex text-center style="padding-left: 15px">
-          <v-btn rounded="true" color="#858988" class="mr-4" @click="$fetch">
+          <v-btn rounded="true" color="#858988" class="mr-4" @click="test">
             Reset Form
           </v-btn>
         </v-flex>
@@ -46,8 +46,8 @@
         <center href="url" style="color: #000000">Signup for an Account</center>
       </a>
       <v-text-field
-        :value="foo.bar"
-        :label="foo.bar"
+        :value="user"
+        :label="user"
         outlined
         disabled
       ></v-text-field>
@@ -57,17 +57,29 @@
 
 <script>
 // this.$auth.loginWith('IdentityServer');
+
 export default {
   /*
   async asyncData({ params, $http }) {
-    const foo = await $http.$get('api/foo');
+    const foo = await $http.$get('api/account/login');
     return { foo };
   },
   */
+
   data() {
     return {
-      foo: 0,
+      valid: true,
+      user: this.$auth.user,
     };
+  },
+
+  methods: {
+    test() {
+      debugger;
+    },
+    async login() {
+      await this.$auth.loginWith('google');
+    },
   },
 };
 </script>

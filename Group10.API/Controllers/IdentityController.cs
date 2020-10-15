@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Group10.API.Controllers
 {
     [Route("[controller]")]
-    [Authorize]
     public class IdentityController : ControllerBase
     {
         [HttpGet]

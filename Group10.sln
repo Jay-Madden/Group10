@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Group10.API", "Group10.API\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Group10.Data", "Group10.Data\Group10.Data.csproj", "{C97B86EB-46A6-43AC-990F-230D95C1F56E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Group10.Auth", "Group10.Auth\Group10.Auth.csproj", "{913FDF0F-1EF0-4C95-9A89-1F00DF183A64}"
-EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,17 +44,5 @@ Global
 		{C97B86EB-46A6-43AC-990F-230D95C1F56E}.Release|x64.Build.0 = Release|Any CPU
 		{C97B86EB-46A6-43AC-990F-230D95C1F56E}.Release|x86.ActiveCfg = Release|Any CPU
 		{C97B86EB-46A6-43AC-990F-230D95C1F56E}.Release|x86.Build.0 = Release|Any CPU
-		{913FDF0F-1EF0-4C95-9A89-1F00DF183A64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{913FDF0F-1EF0-4C95-9A89-1F00DF183A64}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{913FDF0F-1EF0-4C95-9A89-1F00DF183A64}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{913FDF0F-1EF0-4C95-9A89-1F00DF183A64}.Debug|x64.Build.0 = Debug|Any CPU
-		{913FDF0F-1EF0-4C95-9A89-1F00DF183A64}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{913FDF0F-1EF0-4C95-9A89-1F00DF183A64}.Debug|x86.Build.0 = Debug|Any CPU
-		{913FDF0F-1EF0-4C95-9A89-1F00DF183A64}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{913FDF0F-1EF0-4C95-9A89-1F00DF183A64}.Release|Any CPU.Build.0 = Release|Any CPU
-		{913FDF0F-1EF0-4C95-9A89-1F00DF183A64}.Release|x64.ActiveCfg = Release|Any CPU
-		{913FDF0F-1EF0-4C95-9A89-1F00DF183A64}.Release|x64.Build.0 = Release|Any CPU
-		{913FDF0F-1EF0-4C95-9A89-1F00DF183A64}.Release|x86.ActiveCfg = Release|Any CPU
-		{913FDF0F-1EF0-4C95-9A89-1F00DF183A64}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

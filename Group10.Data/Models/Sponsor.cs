@@ -6,14 +6,17 @@ namespace Group10.Data.Models
     public class Sponsor
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string PhoneNumber { get; set; }
-        public string Email { get; set; }
+        public string Name { get; set; } = null!;
+        public string Address { get; set; } = null!;
+        public string PhoneNumber { get; set; }  = null!;
+        public string Email { get; set; } = null!;
 
-        public List<Driver> Drivers { get; set; }
+        public List<Driver> Drivers { get; set; } = null!;
+        
+        public int AppUserId { get; set; }
+        public AppUser AppUser { get; set; } = null!;
 
         public int CatalogId { get; set; }
-        public Catalog Catalog { get; set; }
+        public Catalog Catalog { get; set; } = null!;
     }
 }

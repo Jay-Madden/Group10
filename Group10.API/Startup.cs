@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,8 +8,15 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Group10.API.Security;
 using Group10.Data.Contexts;
+using Group10.Data.Models;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Group10.API
@@ -31,33 +36,64 @@ namespace Group10.API
         {
             services.AddControllers();
             
+            var jwtTokenConfig = Configuration.GetSection("JwtTokenConfig").Get<JwtTokenConfig>();
+            services.AddSingleton(jwtTokenConfig);
+            
+            services.AddScoped<IJwtAuthManager, JwtAuthManager>();
+
             services.AddDbContext<Group10Context>(options =>
                 options.UseNpgsql(Configuration["Group10ConnectionString"]));
-            
-            
-            services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
+
+            services.AddHttpClient();
+
+            services.AddIdentity<AppUser, IdentityRole>(options =>
+                {                        
+                    options.User.AllowedUserNameCharacters = string.Empty;
+                })
+                .AddEntityFrameworkStores<Group10Context>();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
                 {
-                    options.Authority = "https://localhost:5002";
-                    options.TokenValidationParameters = new TokenValidationParameters
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateAudience = false
+                        ValidIssuer = jwtTokenConfig.Issuer,
+                        ValidateIssuer = true,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtTokenConfig.Secret)),
+                        ValidAudience = jwtTokenConfig.Audience,
+                        ValidateAudience = true
                     };
-                });
+                }
+            );
             
             /*
-            services.AddCors(options =>
-            {
-                // this defines a CORS policy called "default"
-                options.AddPolicy("default", policy =>
+                .AddGoogle(options =>
                 {
-                    policy.WithOrigins("https://localhost:5003")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
+                    IConfigurationSection googleAuthNSection =
+                        Configuration.GetSection("Authentication:Google");
+
+                    options.ClientId = googleAuthNSection["ClientId"];
+                    options.ClientSecret = googleAuthNSection["ClientSecret"];
+                    options.CorrelationCookie.SameSite = SameSiteMode.Lax;
                 });
+            
+            
+            /*
+            services.AddCors(opt => { 
+                opt.AddPolicy("CorsPolicy",
+                    policy =>
+                    {
+                        policy.AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowAnyOrigin();
+                    });
             });
             */
-
         }
 
             // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,10 +104,22 @@ namespace Group10.API
                 app.UseDeveloperExceptionPage();
             }
 
+            
+
             app.UseHttpsRedirection();
             app.UseRouting();
-            //app.UseAuthentication();
+            
+
+            app.UseCookiePolicy();
+            app.UseAuthentication();
             app.UseAuthorization();
+            
+            app.UseCors(builder =>
+                builder
+                    .AllowAnyHeader()
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod());
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

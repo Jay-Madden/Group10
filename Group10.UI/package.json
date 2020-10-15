@@ -13,8 +13,10 @@
   "dependencies": {
     "@nuxt/http": "^0.6.0",
     "@nuxtjs/auth": "^4.9.1",
+    "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/proxy": "^2.0.1",
     "core-js": "^3.6.5",
+    "nanoid": "^2.1.11",
     "nuxt": "^2.14.5",
     "prettier": "^2.1.2"
   },
