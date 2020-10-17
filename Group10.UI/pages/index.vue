@@ -9,6 +9,7 @@
         {{ this.$auth.getToken(this.$auth.strategy.name) }}
       </div>
     </v-card>
+    <v-btn link to="/home">hello</v-btn>
   </div>
   <div v-else>else</div>
 </template>

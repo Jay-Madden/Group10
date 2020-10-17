@@ -1,58 +1,15 @@
 <template>
-  <div class="center">
-    <v-card :elevation="24" class="mx-auto" max-width="400" color="#089981">
-      <v-card-title class="justify-center">Login Page</v-card-title>
-      <v-form ref="form" v-model="valid" lazy-validation>
-        <v-col cols="12" sm="12" md="12">
-          <v-text-field
-            v-model="name"
-            :counter="25"
-            :rules="nameRules"
-            label="Username"
-            required
-          ></v-text-field>
-        </v-col>
-
-        <v-col cols="12" sm="12" md="12">
-          <v-text-field
-            v-model="password"
-            :type="show1 ? 'text' : 'password'"
-            name="input-10-1"
-            label="Password"
-            :counter="25"
-          ></v-text-field>
-        </v-col>
-
-        <v-flex text-center style="padding-left: 15px; padding-bottom: 15px">
-          <v-btn
-            :disabled="!valid"
-            rounded="true"
-            color="#858988"
-            class="mr-4"
-            @click="login"
-          >
-            Submit
-          </v-btn>
-        </v-flex>
-
-        <v-flex text-center style="padding-left: 15px">
-          <v-btn rounded="true" color="#858988" class="mr-4" @click="test">
-            Reset Form
-          </v-btn>
-        </v-flex>
-      </v-form>
-
-      <a>
-        <center href="url" style="color: #000000">Signup for an Account</center>
-      </a>
-      <v-text-field
-        :value="user"
-        :label="user"
-        outlined
-        disabled
-      ></v-text-field>
+  <v-container class="center">
+    <navbar />
+    <v-card class="center-text center-card pa-4" max-width="400">
+      <v-card-title class="justify-center"> Login with Google </v-card-title>
+      <v-card class="center-card" elevation="0" color="#FFFFFF" max-width="50">
+        <v-btn icon @click="login">
+          <v-icon x-large color="#000000" text icon> mdi-google </v-icon>
+        </v-btn>
+      </v-card>
     </v-card>
-  </div>
+  </v-container>
 </template>
 
 <script>
