@@ -1,10 +1,20 @@
-export default async function ({ $auth, $http }) {
-  if (!$auth.loggedIn) {
+export default function ({ store, redirect, app: { $auth, $http, router } }) {
+  /*
+  redirect('/');
+
+  if (!$auth.loggedIn || store.state.authStore.isRegistering) {
     return;
   }
 
   const accessCode = $auth.getToken($auth.strategy.name).substr(7);
 
+  if (await $http.$get(`api/account/check?accessCode=${accessCode}`)) {
+    redirect('/home');
+
+    return;
+  }
+
+  debugger;
   try {
     await $auth.loginWith('local', {
       data: {
@@ -19,4 +29,5 @@ export default async function ({ $auth, $http }) {
   } catch (e) {
     console.log(e);
   }
+  */
 }

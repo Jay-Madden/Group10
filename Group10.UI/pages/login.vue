@@ -13,16 +13,7 @@
 </template>
 
 <script>
-// this.$auth.loginWith('IdentityServer');
-
 export default {
-  /*
-  async asyncData({ params, $http }) {
-    const foo = await $http.$get('api/account/login');
-    return { foo };
-  },
-  */
-
   data() {
     return {
       valid: true,
@@ -35,6 +26,13 @@ export default {
       debugger;
     },
     async login() {
+      await this.$auth.loginWith('google');
+    },
+    async login2() {
+      this.$store.commit('authStore/setRegisterStatus', true);
+      const foo = this.$store.state.authStore.isRegistering;
+      console.log(foo);
+      debugger;
       await this.$auth.loginWith('google');
     },
   },

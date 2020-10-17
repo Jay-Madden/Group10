@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Group10.API.Enums;
 using Group10.Data.Models;
 using Microsoft.IdentityModel.Tokens;
 
@@ -22,13 +24,11 @@ public class JwtAuthManager : IJwtAuthManager
         _secret = Encoding.ASCII.GetBytes(_jwtTokenConfig.Secret);
     }
 
-    public string GenerateToken(AppUser user, DateTime now)
+    public string GenerateToken(IEnumerable<Claim> claims, DateTime now)
     {
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[]{
-                new Claim("UserID", user.Id)
-            }),
+            Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddDays(1),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(_secret),

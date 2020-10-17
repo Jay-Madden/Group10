@@ -4,7 +4,8 @@ module.exports = {
     devtool: 'source-map',
   },
 };
-export default {
+/** @type {import("@nuxt/types").NuxtConfig} */
+const config = {
   // Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
   ssr: false,
 
@@ -50,7 +51,6 @@ export default {
   },
 
   auth: {
-    plugins: ['~/plugins/auth.js'],
     strategies: {
       local: {
         endpoints: {
@@ -70,9 +70,12 @@ export default {
         tokenType: 'Bearer',
       },
       google: {
-        client_id:
-          process.env.GOOGLE_CLIENT_ID,
+        client_id: process.env.GOOGLE_CLIENT_ID,
       },
+    },
+    rewriteRedirects: false,
+    redirect: {
+      home: '/home'
     },
   },
 
@@ -98,3 +101,4 @@ export default {
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
 };
+export default config;

@@ -18,5 +18,6 @@
 <script>
 export default {
   layout: 'account',
+  middleware: 'login_check_middleware',
 };
 </script>

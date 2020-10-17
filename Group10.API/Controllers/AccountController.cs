@@ -1,11 +1,14 @@
 using System;
+using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Group10.API.Enums;
 using Group10.API.Models;
 using Group10.API.Security;
 using Group10.Data.Contexts;
+using Group10.Data.Enums;
 using Group10.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -16,6 +19,7 @@ namespace Group10.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class AccountController : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager;
@@ -55,21 +59,41 @@ namespace Group10.API.Controllers
             
             return Ok(new{user});
         }
-        /*
-        [HttpPost("get")]
+
+        [HttpGet("check")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] LoginAuthRequest registerRequest)
+        public async Task<IActionResult> CheckUser([FromQuery]string accessCode)
         {
-            
+            var googleInfo = await ValidateGoogleTokenAsync(accessCode);
+            var user = await _context.AppUser.SingleOrDefaultAsync(x => x.AuthId == googleInfo.UserId);
+            return Ok(user is not null);
         }
-        */
+        
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register([FromBody] RegisterAuthRequest registerRequest)
+        {
+            /*
+            var userInfo = await ValidateGoogleTokenAsync(registerRequest.AccessToken);
+            var newUser = new AppUser
+            {
+                AuthId = tokenInfo.UserId, 
+                UserName = loginRequest.GoogleUserInfo.name, 
+                Email = loginRequest.GoogleUserInfo.email,
+                
+            };
+            var createdUser = await _userManager.CreateAsync(newUser);
+            return Ok(createdUser);
+            */
+            return Ok();
+        }
         
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginAuthRequest loginRequest)
         {
             
-            GoogleApiTokenInfo tokenInfo = await ValidateGoogleTokenAsync(loginRequest);
+            GoogleApiTokenInfo tokenInfo = await ValidateGoogleTokenAsync(loginRequest.AccessToken);
 
             if (tokenInfo.UserId is null)
             {
@@ -81,30 +105,21 @@ namespace Group10.API.Controllers
 
             if (user is null)
             {
-                var newUser = new AppUser
-                {
-                    AuthId = tokenInfo.UserId, 
-                    UserName = loginRequest.GoogleUserInfo.name, 
-                    Email = loginRequest.GoogleUserInfo.email,
-                    
-                };
-                var createdUser = await _userManager.CreateAsync(newUser);
-                return Ok(createdUser);
+                return BadRequest("User does not exist");
             }
 
-
             await _signInManager.SignInAsync(user, false);
-
-            var token = _jwtAuthManager.GenerateToken(user, DateTime.Now);
+            
+            var token = _jwtAuthManager.GenerateToken(User.Claims, DateTime.Now);
             
             return Ok(new{ token });
         }
 
-        private async Task<GoogleApiTokenInfo> ValidateGoogleTokenAsync(LoginAuthRequest loginRequest)
+        private async Task<GoogleApiTokenInfo> ValidateGoogleTokenAsync(string accessToken)
         {
             using var client = _httpClientFactory.CreateClient();
 
-            var httpReq = await client.GetAsync($"{AccessTokenInfoUrl}{loginRequest.AccessToken}");
+            var httpReq = await client.GetAsync($"{AccessTokenInfoUrl}{accessToken}");
             var jsonResp = await httpReq.Content.ReadAsStringAsync();
             var tokenInfo = JsonSerializer.Deserialize<GoogleApiTokenInfo>(jsonResp);
             return tokenInfo!;
