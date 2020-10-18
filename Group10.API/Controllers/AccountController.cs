@@ -44,7 +44,7 @@ namespace Group10.API.Controllers
 
         [HttpGet("user")]
         [Authorize]
-        public async Task<IActionResult> Register()
+        public async Task<IActionResult> UserInfo()
         {
             var userId = User.FindFirst(AppClaims.UserId)?.Value;
             if (userId is null)
@@ -73,18 +73,27 @@ namespace Group10.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterAuthRequest registerRequest)
         {
-            /*
             var userInfo = await ValidateGoogleTokenAsync(registerRequest.AccessToken);
+            if (userInfo.UserId is null)
+            {
+                return BadRequest("Invalid google access token");
+            }
+            
             var newUser = new AppUser
             {
-                AuthId = tokenInfo.UserId, 
-                UserName = loginRequest.GoogleUserInfo.name, 
-                Email = loginRequest.GoogleUserInfo.email,
-                
+                AuthId = userInfo.UserId, 
+                UserName = registerRequest.GoogleUserInfo.name,
+                Email = registerRequest.GoogleUserInfo.email,
+                Picture = registerRequest.GoogleUserInfo.picture!
             };
-            var createdUser = await _userManager.CreateAsync(newUser);
-            return Ok(createdUser);
-            */
+            
+            var foo = await _userManager.CreateAsync(newUser);
+            await _userManager.AddClaimsAsync(newUser,
+                new[]
+                {
+                    new Claim(AppClaims.UserId, newUser.Id),
+                    new Claim(AppClaims.UserRole, registerRequest.UserRole)
+                });
             return Ok();
         }
         
@@ -109,8 +118,9 @@ namespace Group10.API.Controllers
             }
 
             await _signInManager.SignInAsync(user, false);
+            var claims = await _userManager.GetClaimsAsync(user);
             
-            var token = _jwtAuthManager.GenerateToken(User.Claims, DateTime.Now);
+            var token = _jwtAuthManager.GenerateToken(claims, DateTime.Now);
             
             return Ok(new{ token });
         }

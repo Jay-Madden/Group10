@@ -1,7 +1,9 @@
 namespace Group10.API.Models
 {
-    public class LoginAuthRequest : AuthRequest
+    public class LoginAuthRequest
     {
-        public GoogleUserInfo GoogleUserInfo { get; } = null!;
+        public string AccessToken { get; set; } = null!;
+        
+        public GoogleUserInfo GoogleUserInfo { get; set; } = null!;
     }
 }

@@ -1,7 +1,11 @@
 namespace Group10.API.Models
 {
-    public class RegisterAuthRequest : AuthRequest
+    public class RegisterAuthRequest
     {
-        public string UserRole { get; } = null!;
+        public string AccessToken { get; set; } = null!;
+        
+        public string UserRole { get; set; } = null!;
+        
+        public GoogleUserInfo GoogleUserInfo { get; set; } = null!;
     }
 }

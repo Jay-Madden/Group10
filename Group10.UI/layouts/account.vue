@@ -4,17 +4,16 @@
       <v-list>
         <v-list-item class="px-2">
           <v-list-item-avatar>
-            <v-img src="kermit.jpg"></v-img>
+            <v-img :src="this.$auth.user.picture"></v-img>
           </v-list-item-avatar>
         </v-list-item>
-
         <v-list-item>
           <v-list-item-content>
             <v-list-item-title class="title">
-              Welcome Kermit!
+              Welcome {{ this.$auth.user.userName }}
             </v-list-item-title>
             <v-list-item-subtitle>
-              kermit_drinking_tea@gmail.com
+              {{ this.$auth.user.email }}
             </v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>

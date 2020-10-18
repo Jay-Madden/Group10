@@ -47,10 +47,12 @@ namespace Group10.API
             services.AddHttpClient();
 
             services.AddIdentity<AppUser, IdentityRole>(options =>
-                {                        
+                {
                     options.User.AllowedUserNameCharacters = string.Empty;
                 })
                 .AddEntityFrameworkStores<Group10Context>();
+                //.AddClaimsPrincipalFactory<AppUserClaimsPrincipalFactory>(); 
+
 
             services.AddAuthentication(options =>
             {
@@ -70,30 +72,6 @@ namespace Group10.API
                     };
                 }
             );
-            
-            /*
-                .AddGoogle(options =>
-                {
-                    IConfigurationSection googleAuthNSection =
-                        Configuration.GetSection("Authentication:Google");
-
-                    options.ClientId = googleAuthNSection["ClientId"];
-                    options.ClientSecret = googleAuthNSection["ClientSecret"];
-                    options.CorrelationCookie.SameSite = SameSiteMode.Lax;
-                });
-            
-            
-            /*
-            services.AddCors(opt => { 
-                opt.AddPolicy("CorsPolicy",
-                    policy =>
-                    {
-                        policy.AllowAnyHeader()
-                            .AllowAnyMethod()
-                            .AllowAnyOrigin();
-                    });
-            });
-            */
         }
 
             // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
