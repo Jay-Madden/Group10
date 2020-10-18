@@ -1,6 +1,13 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="drawer" dark class="background" temporary app>
+    <v-navigation-drawer
+      style="z-index: 9999"
+      v-model="drawer"
+      dark
+      class="background"
+      temporary
+      app
+    >
       <v-list>
         <v-list-item class="px-2">
           <v-list-item-avatar>
@@ -54,10 +61,18 @@
         </div>
       </template>
     </v-navigation-drawer>
-    <nuxt />
-    <v-app-bar-nav-icon @click.stop="drawer = !drawer">
-      <v-icon dark> mdi-menu </v-icon>
-    </v-app-bar-nav-icon>
+    <v-container>
+      <v-row>
+        <v-col>
+          <v-app-bar-nav-icon @click.stop="drawer = !drawer">
+            <v-icon dark> mdi-menu </v-icon>
+          </v-app-bar-nav-icon>
+        </v-col>
+        <v-col>
+          <nuxt />
+        </v-col>
+      </v-row>
+    </v-container>
   </v-app>
 </template>
 
@@ -65,7 +80,7 @@
 export default {
   data() {
     return {
-      drawer: null,
+      drawer: false,
     };
   },
 };

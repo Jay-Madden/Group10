@@ -41,8 +41,11 @@ namespace Group10.API
             
             services.AddScoped<IJwtAuthManager, JwtAuthManager>();
 
+            string? connectionString = Environment.GetEnvironmentVariable("GROUP10_CONNECTION_STRING")
+                                       ?? Configuration["Group10ConnectionString"];
+
             services.AddDbContext<Group10Context>(options =>
-                options.UseNpgsql(Configuration["Group10ConnectionString"]));
+                options.UseNpgsql(connectionString));
 
             services.AddHttpClient();
 
@@ -51,7 +54,6 @@ namespace Group10.API
                     options.User.AllowedUserNameCharacters = string.Empty;
                 })
                 .AddEntityFrameworkStores<Group10Context>();
-                //.AddClaimsPrincipalFactory<AppUserClaimsPrincipalFactory>(); 
 
 
             services.AddAuthentication(options =>
