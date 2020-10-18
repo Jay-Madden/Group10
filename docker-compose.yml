@@ -14,7 +14,7 @@ services:
       - Group10Network
     ports:
       - "5000:5000"
-    environment:
+    env_file:
       - api_env.env
 
 networks:
