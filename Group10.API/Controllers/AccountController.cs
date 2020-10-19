@@ -66,6 +66,7 @@ namespace Group10.API.Controllers
         {
             var googleInfo = await ValidateGoogleTokenAsync(accessCode);
             var user = await _context.AppUser.SingleOrDefaultAsync(x => x.AuthId == googleInfo.UserId);
+
             return Ok(user is not null);
         }
         
@@ -128,10 +129,11 @@ namespace Group10.API.Controllers
         private async Task<GoogleApiTokenInfo> ValidateGoogleTokenAsync(string accessToken)
         {
             using var client = _httpClientFactory.CreateClient();
-
+            
             var httpReq = await client.GetAsync($"{AccessTokenInfoUrl}{accessToken}");
             var jsonResp = await httpReq.Content.ReadAsStringAsync();
             var tokenInfo = JsonSerializer.Deserialize<GoogleApiTokenInfo>(jsonResp);
+            
             return tokenInfo!;
         }
     }

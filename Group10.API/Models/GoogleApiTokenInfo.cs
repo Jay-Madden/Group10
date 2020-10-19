@@ -26,5 +26,6 @@ namespace Group10.API.Models
         public bool? VerifiedEmail { get; set; }
 
         [JsonPropertyName("access_type")]
-        public string? AccessType { get; set; }    }
+        public string? AccessType { get; set; }
+    }
 }
