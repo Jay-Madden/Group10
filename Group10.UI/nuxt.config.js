@@ -4,7 +4,7 @@ module.exports = {
     devtool: 'source-map',
   },
 };
-const isProd = () => process.env.PROD === 1;
+const isProd = () => process.env.PROD == '1';
 const prodHost = '0.0.0.0';
 const localHost = 'localhost';
 const prodUrl = 'http://api:80/api';
