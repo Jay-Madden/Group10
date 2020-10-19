@@ -4,6 +4,12 @@ module.exports = {
     devtool: 'source-map',
   },
 };
+const isProd = () => process.env.PROD === 1;
+const prodHost = '0.0.0.0';
+const localHost = 'localhost';
+const prodUrl = 'http://api:80/api';
+const devUrl = 'http://localhost:5000/api';
+
 /** @type {import("@nuxt/types").NuxtConfig} */
 const config = {
   // Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
@@ -11,7 +17,7 @@ const config = {
 
   server: {
     port: 3000, // default: 3000
-    host: '0.0.0.0', // default: localhost
+    host: isProd() ? prodHost : localHost, // default: localhost
   },
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -46,10 +52,13 @@ const config = {
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: ['@nuxt/http', '@nuxtjs/axios', '@nuxtjs/auth'],
 
+  axios: {
+    proxy: isProd(),
+  },
   http: {
     proxy: true,
   },
-  proxy: ['http://localhost:5000/api'],
+  proxy: [isProd() ? prodUrl : devUrl],
 
   router: {
     middleware: ['auth'],
