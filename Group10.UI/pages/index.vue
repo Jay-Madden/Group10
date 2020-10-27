@@ -1,27 +1,35 @@
 <template>
   <div v-if="$auth.loggedIn">
-    <v-card width="600" class="pa-md-4 mx-lg-auto" elevation="2">
-      <v-chip class="mx-auto">Currently Logged in User</v-chip>
-      <div>
-        {{ this.$auth.user }}
-      </div>
-      <div>
-        {{ this.$auth.getToken(this.$auth.strategy.name) }}
-      </div>
-    </v-card>
-    <v-btn link to="/home">hello</v-btn>
+    <v-flex>
+      <v-layout justify-center align-center>
+        <v-card class="ma-5" dark elevation="5" outlined>
+          <v-card-title class="justify-center"> Current Points </v-card-title>
+          <v-divider />
+          <v-card-title class="justify-center">0</v-card-title>
+        </v-card>
+      </v-layout>
+      <v-row>
+        <v-col>
+          <v-card class="ma-5" dark elevation="5" outlined>
+            <v-card-title class="justify-center">
+              Current Sponsors
+            </v-card-title>
+            <v-divider />
+          </v-card>
+        </v-col>
+        <v-col>
+          <v-card class="ma-5" dark elevation="5" outlined>
+            <v-card-title class="justify-center"> Past Orders </v-card-title>
+            <v-divider />
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-flex>
   </div>
-  <div v-else>else</div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      token: 1,
-      foo: '',
-    };
-  },
-  methods: {},
+  middleware: 'login_check_middleware',
 };
 </script>

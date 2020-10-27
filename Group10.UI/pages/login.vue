@@ -12,6 +12,7 @@
 
 <script>
 export default {
+  layout: 'login',
   methods: {
     async login() {
       await this.$auth.loginWith('google');

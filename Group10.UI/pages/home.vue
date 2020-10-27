@@ -1,23 +1,27 @@
 <template>
   <div v-if="$auth.loggedIn">
-    <v-flex>
-      <v-layout justify-center align-center>
-        <v-card dark max-width="400" color="#082c6c" outlined>
-          <v-card-title class="justify-center">
-            Current Amount of Points Accumulated:
-          </v-card-title>
-          <v-card-title class="justify-center">0</v-card-title>
-        </v-card>
-      </v-layout>
-    </v-flex>
+    <v-card width="600" class="pa-md-4 mx-lg-auto" elevation="2">
+      <v-chip class="mx-auto">Currently Logged in User</v-chip>
+      <div>
+        {{ this.$auth.user }}
+      </div>
+      <div>
+        {{ this.$auth.getToken(this.$auth.strategy.name) }}
+      </div>
+    </v-card>
+    <v-btn link to="/">hello</v-btn>
   </div>
-
   <div v-else>else</div>
 </template>
 
 <script>
 export default {
-  layout: 'account',
-  middleware: 'login_check_middleware',
+  data() {
+    return {
+      token: 1,
+      foo: '',
+    };
+  },
+  methods: {},
 };
 </script>

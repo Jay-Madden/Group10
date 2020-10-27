@@ -20,6 +20,10 @@ const config = {
     host: isProd() ? prodHost : localHost, // default: localhost
   },
 
+  env: {
+    prod: process.env.PROD == '1',
+  },
+
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
     titleTemplate: '%s - Group10.UI',
