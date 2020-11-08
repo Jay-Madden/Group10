@@ -1,14 +1,12 @@
-namespace Group10.Data.Enums
+using System;
+using System.Collections.Generic;
+
+namespace Group10.API.Enums
 {
-    public readonly struct AppRoles
+    public class AppRoles
     {
-        private readonly string _val;
-        private AppRoles(string val) => _val = val;
-        
-        public static AppRoles Admin => new AppRoles("admin");
-        public static AppRoles Driver => new AppRoles("driver");
-        public static AppRoles Sponsor => new AppRoles("sponsor");
-        
-        public static implicit operator string(AppRoles role) => role._val;
+        public static string Admin => "Admin";
+        public static string Driver => "Driver";
+        public static string Sponsor => "Sponsor";
     }
 }

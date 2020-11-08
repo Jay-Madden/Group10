@@ -8,7 +8,7 @@ using Group10.API.Enums;
 using Group10.API.Models;
 using Group10.API.Security;
 using Group10.Data.Contexts;
-using Group10.Data.Enums;
+using Group10.API.Enums;
 using Group10.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -47,15 +47,30 @@ namespace Group10.API.Controllers
         public async Task<IActionResult> UserInfo()
         {
             var userId = User.FindFirst(AppClaims.UserId)?.Value;
+            var userRole = User.FindFirst(AppClaims.UserRole)?.Value;
+
             if (userId is null)
             {
                 return BadRequest("Specified UserId not found");
             }
-            var user = await _context.AppUser.SingleOrDefaultAsync(x => x.Id == userId);
-            if (user is null)
+            if (userRole is null)
+            {
+                return BadRequest("UserRole not found");
+            }
+            
+            var dbUser = await _context.AppUser.SingleOrDefaultAsync(x => x.Id == userId);
+            if (dbUser is null)
             {
                 return BadRequest("Specified User not found");
             }
+
+            var user = new UserModel
+            {
+                Name = dbUser.UserName,
+                Picture = dbUser.Picture,
+                Email = dbUser.Email,
+                Role = userRole
+            };
             
             return Ok(new{user});
         }

@@ -1,5 +1,11 @@
 export default async function ({ redirect, app: { $auth, $http } }) {
   if ($auth.strategy.name === 'local') {
+    if ($auth.user.role === 'Driver') {
+      redirect('/driver');
+    }
+    if ($auth.user.role === 'Sponsor') {
+      redirect('/sponsor');
+    }
     return;
   }
   const accessCode = $auth.getToken($auth.strategy.name).substr(7);

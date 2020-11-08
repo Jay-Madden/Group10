@@ -40,6 +40,7 @@
 
 <script>
 export default {
+  layout: 'login',
   data() {
     return {
       items: ['Admin', 'Driver', 'Sponsor'],
@@ -53,7 +54,7 @@ export default {
         UserRole: this.accountType,
         GoogleUserInfo: this.$auth.user,
       });
-      this.$router.push('/home');
+      this.$router.push('/');
     },
   },
 };

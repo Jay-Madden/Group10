@@ -8,7 +8,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Group10.API.Enums;
-using Group10.Data.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Group10.API.Security

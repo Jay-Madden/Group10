@@ -1,9 +1,8 @@
 using System;
-using Group10.Data.Enums;
 
 namespace Group10.API.Models
 {
-    public class UiUserModel
+    public class UserModel
     {
         public string Name { get; set; } = null!;
 
@@ -11,7 +10,7 @@ namespace Group10.API.Models
         
         public Uri Picture { get; set; } = null!;
 
-        public AppRoles Role { get; set; } 
+        public string Role { get; set; } = null!;
 
     }
 }
