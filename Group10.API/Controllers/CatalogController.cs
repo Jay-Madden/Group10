@@ -36,14 +36,14 @@ namespace Group10.API.Controllers
                     title = result.title
                 };
                 
-                
                 var imageurl = await _etsyService.getImageAsync(result.listing_id);
+                
                 if (imageurl is null || imageurl.results is null)
                 {
                     return BadRequest("No image associated with listing id");
                 }
 
-                tmp.url_170x135 = imageurl.results[0].url_170x135;
+                tmp.image = imageurl.results[0].url_170x135;
 
                 relevantinfo.Add(tmp);
             }
