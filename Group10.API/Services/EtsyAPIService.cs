@@ -1,15 +1,17 @@
 ﻿using System.Net.Http;
-using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Group10.API.Models;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+
 
 namespace Group10.API.Services
 {
-    public class EtsyAPIService
+    public class EtsyAPIService : IEtsyAPIService
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private const string listingInfoUrl = "https://openapi.etsy.com/v2/listings/active?api_key=";
+        private const string listingInfoUrl = "https://openapi.etsy.com/v2/listings/active?limit=25&fields=listing_id,title,description,price&api_key=";
         private string etsyConnection;
         
         public EtsyAPIService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
@@ -24,19 +26,20 @@ namespace Group10.API.Services
             using var client = _httpClientFactory.CreateClient();
             var jsonresponse = await client.GetAsync($"{listingInfoUrl}{etsyConnection}");
             var jsonResp = await jsonresponse.Content.ReadAsStringAsync();
-            var listinginfo = JsonSerializer.Deserialize<EtsyAPIListingInfo>(jsonResp);
+            var listinginfo = JsonConvert.DeserializeObject<EtsyAPIListingInfo>(jsonResp);
 
             return listinginfo;
         }
 
-        public async Task<EtsyAPIimageInfo?> getImageAsync(string listingId)
+        public async Task<EtsyAPIimageInfo?> getImageAsync(int listingId)
         {
             string imageUrL = $"https://openapi.etsy.com/v2/listings/{listingId}/images?api_key=";
 
             using var client = _httpClientFactory.CreateClient();
             var jsonresponse = await client.GetAsync($"{imageUrL}{etsyConnection}");
+            await Task.Delay(50);
             var jsonResp = await jsonresponse.Content.ReadAsStringAsync();
-            var imageinfo = JsonSerializer.Deserialize<EtsyAPIimageInfo>(jsonResp);
+            var imageinfo = JsonConvert.DeserializeObject<EtsyAPIimageInfo>(jsonResp);
 
             return imageinfo;
         }

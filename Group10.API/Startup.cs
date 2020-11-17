@@ -10,7 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Group10.API.Controllers;
 using Group10.API.Security;
+using Group10.API.Services;
 using Group10.Data.Contexts;
 using Group10.Data.Models;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -40,6 +42,8 @@ namespace Group10.API
             services.AddSingleton(jwtTokenConfig);
             
             services.AddScoped<IJwtAuthManager, JwtAuthManager>();
+            
+            services.AddSingleton<IEtsyAPIService, EtsyAPIService>();
 
             string? connectionString = Environment.GetEnvironmentVariable("GROUP10_CONNECTION_STRING")
                                        ?? Configuration["Group10ConnectionString"];
