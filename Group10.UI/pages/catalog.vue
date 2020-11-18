@@ -6,11 +6,19 @@
       </v-card>
     </v-layout>
     <v-card class="ma-4" elevation="2" outlined>
-      <p v-if="$fetchState.pending">
-        <v-progress-circular indeterminate />
-      </p>
-      <p v-else-if="$fetchState.error">An error occurred :(</p>
-      <v-list class="overflow-y-auto">
+      <v-container v-if="$fetchState.pending" fluid fill-height>
+        <v-row justify="center" align="center">
+          <v-col>
+            <v-progress-circular indeterminate />
+          </v-col>
+        </v-row>
+      </v-container>
+      <v-container v-else-if="$fetchState.error" fluid fill-height>
+        <v-row justify="center" align="center">
+          <v-col>An error occurred :(</v-col>
+        </v-row>
+      </v-container>
+      <v-list v-else class="overflow-y-auto">
         <v-list-item v-for="(item, i) in items" :key="i">
           <v-hover v-slot="{ hover }">
             <v-row>
@@ -21,7 +29,7 @@
                 <v-card class="ma-4" elevation="3">
                   <v-img
                     :max-height="hover ? 150 : 50"
-                    :src="item.url_170x135"
+                    :src="item.image"
                     :class="{ 'on-hover': hover }"
                   ></v-img>
                 </v-card>
@@ -29,11 +37,13 @@
               <v-col align-self="center">
                 {{ item.title }}
               </v-col>
-              <v-col align-self="center">
-                {{ item.description }}
-              </v-col>
-              <v-card class="ma-2">
-                <v-col> ${{ item.price }} </v-col>
+              <v-spacer />
+              <v-card class="ma-2 pa-4">
+                <v-container fluid fill-height>
+                  <v-row justify="center" align="center">
+                    {{ Math.round(item.price) }}
+                  </v-row>
+                </v-container>
               </v-card>
             </v-row>
           </v-hover>

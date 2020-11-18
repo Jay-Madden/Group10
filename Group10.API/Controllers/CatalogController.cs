@@ -19,38 +19,32 @@ namespace Group10.API.Controllers
         [HttpGet("info")]
         public async Task<IActionResult> Info()
         {
-            List<RelevantCatalogInfo> relevantinfo = new List<RelevantCatalogInfo>();
+            List<RelevantCatalogInfo> relevantInfo = new List<RelevantCatalogInfo>();
             
             var listing = await _etsyService.getListingAsync();
-
-            if (listing is null || listing.results is null)
+            if (listing?.results is null)
             {
                 return BadRequest("No listings found in catalog");
             }
+            
             foreach (var result in listing.results)
             {
-                RelevantCatalogInfo tmp = new RelevantCatalogInfo
+                var imageUrl = await _etsyService.getImageAsync(result.listing_id);
+                if (imageUrl?.results is null or { Count: < 1 })
+                {
+                    continue;
+                }
+                
+                relevantInfo.Add(new RelevantCatalogInfo
                 {
                     price = result.price,
-                    descrption = result.description,
-                    title = result.title
-                };
-                
-                var imageurl = await _etsyService.getImageAsync(result.listing_id);
-                
-                if (imageurl is null || imageurl.results is null)
-                {
-                    return BadRequest("No image associated with listing id");
-                }
-
-                tmp.image = imageurl.results[0].url_170x135;
-
-                relevantinfo.Add(tmp);
+                    description = result.description,
+                    title = result.title, 
+                    image = imageUrl.results[0].url_170x135
+                });
             }
 
-            return Ok(relevantinfo);
-            
+            return Ok(relevantInfo);
         }
-        
     }
 }

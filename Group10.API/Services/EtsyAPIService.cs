@@ -36,12 +36,11 @@ namespace Group10.API.Services
             string imageUrL = $"https://openapi.etsy.com/v2/listings/{listingId}/images?api_key=";
 
             using var client = _httpClientFactory.CreateClient();
-            var jsonresponse = await client.GetAsync($"{imageUrL}{etsyConnection}");
+            var etsyResponse = await client.GetAsync($"{imageUrL}{etsyConnection}");
             await Task.Delay(50);
-            var jsonResp = await jsonresponse.Content.ReadAsStringAsync();
-            var imageinfo = JsonConvert.DeserializeObject<EtsyAPIimageInfo>(jsonResp);
-
-            return imageinfo;
+            var jsonResp = await etsyResponse.Content.ReadAsStringAsync();
+            
+            return JsonConvert.DeserializeObject<EtsyAPIimageInfo>(jsonResp);
         }
     }
 }
