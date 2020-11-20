@@ -3,15 +3,17 @@ using System;
 using Group10.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Group10.Data.Migrations
 {
     [DbContext(typeof(Group10Context))]
-    partial class Group10ContextModelSnapshot : ModelSnapshot
+    [Migration("20201118195638_MessagesTable")]
+    partial class MessagesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,33 +143,6 @@ namespace Group10.Data.Migrations
                     b.HasIndex("AppUserId");
 
                     b.ToTable("Drivers");
-                });
-
-            modelBuilder.Entity("Group10.Data.Models.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
-
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int?>("DriverId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Messages")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("DriverId");
-
-                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Group10.Data.Models.Order", b =>
@@ -414,21 +389,6 @@ namespace Group10.Data.Migrations
                     b.Navigation("AppUser");
                 });
 
-            modelBuilder.Entity("Group10.Data.Models.Message", b =>
-                {
-                    b.HasOne("Group10.Data.Models.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Group10.Data.Models.Driver", null)
-                        .WithMany("Messages")
-                        .HasForeignKey("DriverId");
-
-                    b.Navigation("AppUser");
-                });
-
             modelBuilder.Entity("Group10.Data.Models.Order", b =>
                 {
                     b.HasOne("Group10.Data.Models.Driver", "Driver")
@@ -545,8 +505,6 @@ namespace Group10.Data.Migrations
 
             modelBuilder.Entity("Group10.Data.Models.Driver", b =>
                 {
-                    b.Navigation("Messages");
-
                     b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618

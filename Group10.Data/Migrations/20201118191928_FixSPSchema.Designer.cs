@@ -3,15 +3,17 @@ using System;
 using Group10.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Group10.Data.Migrations
 {
     [DbContext(typeof(Group10Context))]
-    partial class Group10ContextModelSnapshot : ModelSnapshot
+    [Migration("20201118191928_FixSPSchema")]
+    partial class FixSPSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,6 +135,10 @@ namespace Group10.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("DriverId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("Points")
                         .HasColumnType("integer");
 
@@ -145,13 +151,7 @@ namespace Group10.Data.Migrations
 
             modelBuilder.Entity("Group10.Data.Models.Message", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
-
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
+                    b.Property<string>("Id")
                         .HasColumnType("text");
 
                     b.Property<int?>("DriverId")
@@ -161,9 +161,11 @@ namespace Group10.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.Property<string>("userId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.HasIndex("AppUserId");
+                    b.HasKey("Id");
 
                     b.HasIndex("DriverId");
 
@@ -233,6 +235,10 @@ namespace Group10.Data.Migrations
 
                     b.Property<int>("CatalogId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("SponsorId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -416,17 +422,9 @@ namespace Group10.Data.Migrations
 
             modelBuilder.Entity("Group10.Data.Models.Message", b =>
                 {
-                    b.HasOne("Group10.Data.Models.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Group10.Data.Models.Driver", null)
                         .WithMany("Messages")
                         .HasForeignKey("DriverId");
-
-                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("Group10.Data.Models.Order", b =>

@@ -20,5 +20,7 @@ namespace Group10.Data.Contexts
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<Product> Products { get; set; } = null!;
         public DbSet<Sponsor> Sponsors { get; set; } = null!;
+
+        public DbSet<Message> Messages { get; set; } = null!;
     }
 }

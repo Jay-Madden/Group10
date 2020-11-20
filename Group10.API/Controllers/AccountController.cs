@@ -113,6 +113,7 @@ namespace Group10.API.Controllers
             return Ok();
         }
         
+
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginAuthRequest loginRequest)
@@ -140,6 +141,9 @@ namespace Group10.API.Controllers
             
             return Ok(new{ token });
         }
+
+
+
 
         private async Task<GoogleApiTokenInfo> ValidateGoogleTokenAsync(string accessToken)
         {

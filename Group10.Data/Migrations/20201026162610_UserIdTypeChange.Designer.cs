@@ -3,36 +3,23 @@ using System;
 using Group10.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Group10.Data.Migrations
 {
     [DbContext(typeof(Group10Context))]
-    partial class Group10ContextModelSnapshot : ModelSnapshot
+    [Migration("20201026162610_UserIdTypeChange")]
+    partial class UserIdTypeChange
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityByDefaultColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.0-rc.1.20451.13");
-
-            modelBuilder.Entity("DriverSponsor", b =>
-                {
-                    b.Property<int>("DriversId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SponsorsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("DriversId", "SponsorsId");
-
-                    b.HasIndex("SponsorsId");
-
-                    b.ToTable("DriverSponsor");
-                });
 
             modelBuilder.Entity("Group10.Data.Models.AppUser", b =>
                 {
@@ -129,45 +116,25 @@ namespace Group10.Data.Migrations
                         .HasColumnType("integer")
                         .UseIdentityByDefaultColumn();
 
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("AppUserId1")
                         .HasColumnType("text");
 
                     b.Property<int>("Points")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.ToTable("Drivers");
-                });
-
-            modelBuilder.Entity("Group10.Data.Models.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .UseIdentityByDefaultColumn();
-
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int?>("DriverId")
+                    b.Property<int>("SponsorId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Messages")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("AppUserId1");
 
-                    b.HasIndex("DriverId");
+                    b.HasIndex("SponsorId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Drivers");
                 });
 
             modelBuilder.Entity("Group10.Data.Models.Order", b =>
@@ -227,16 +194,34 @@ namespace Group10.Data.Migrations
                         .HasColumnType("integer")
                         .UseIdentityByDefaultColumn();
 
-                    b.Property<string>("AppUserId")
+                    b.Property<string>("Address")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("AppUserId1")
                         .HasColumnType("text");
 
                     b.Property<int>("CatalogId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("AppUserId1");
 
                     b.HasIndex("CatalogId");
 
@@ -388,45 +373,21 @@ namespace Group10.Data.Migrations
                     b.ToTable("OrderProduct");
                 });
 
-            modelBuilder.Entity("DriverSponsor", b =>
-                {
-                    b.HasOne("Group10.Data.Models.Driver", null)
-                        .WithMany()
-                        .HasForeignKey("DriversId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Group10.Data.Models.Sponsor", null)
-                        .WithMany()
-                        .HasForeignKey("SponsorsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Group10.Data.Models.Driver", b =>
                 {
                     b.HasOne("Group10.Data.Models.AppUser", "AppUser")
                         .WithMany()
-                        .HasForeignKey("AppUserId")
+                        .HasForeignKey("AppUserId1");
+
+                    b.HasOne("Group10.Data.Models.Sponsor", "Sponsor")
+                        .WithMany("Drivers")
+                        .HasForeignKey("SponsorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AppUser");
-                });
 
-            modelBuilder.Entity("Group10.Data.Models.Message", b =>
-                {
-                    b.HasOne("Group10.Data.Models.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Group10.Data.Models.Driver", null)
-                        .WithMany("Messages")
-                        .HasForeignKey("DriverId");
-
-                    b.Navigation("AppUser");
+                    b.Navigation("Sponsor");
                 });
 
             modelBuilder.Entity("Group10.Data.Models.Order", b =>
@@ -455,9 +416,7 @@ namespace Group10.Data.Migrations
                 {
                     b.HasOne("Group10.Data.Models.AppUser", "AppUser")
                         .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AppUserId1");
 
                     b.HasOne("Group10.Data.Models.Catalog", "Catalog")
                         .WithMany("Sponsors")
@@ -545,9 +504,12 @@ namespace Group10.Data.Migrations
 
             modelBuilder.Entity("Group10.Data.Models.Driver", b =>
                 {
-                    b.Navigation("Messages");
-
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("Group10.Data.Models.Sponsor", b =>
+                {
+                    b.Navigation("Drivers");
                 });
 #pragma warning restore 612, 618
         }
