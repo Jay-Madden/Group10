@@ -40,13 +40,11 @@ namespace Group10.API.Controllers
                 .ToListAsync();
 
             //create new model and populate it
-            var model = new DriverListModel();
-            for (int i = 0; i < drivers.Count(); i++)
+            var model = new DriverListModel
             {
-                var temp = drivers[i];
-                model.DriverIds.Add(temp.AppUserId);
-            }
-                
+                DriverIds = drivers.Select(x => x.AppUserId).ToList()
+            };
+
             //return list of current drivers for current sponsor
             return Ok(model);
         }
@@ -64,61 +62,69 @@ namespace Group10.API.Controllers
             var sponsorUser = await _context
                 .AppUser
                 .SingleOrDefaultAsync(x => x.Id == sponsorId);
-            var sponsorEmail = sponsorUser.Email;
 
             //get current points for driver
             var num = await _context.Drivers
                 .SingleOrDefaultAsync(x => x.AppUserId == driverId);
 
             //increment the points attribute
-            if (points > 0)
+            if (points <= 0)
             {
-                num.Points += points;
-                await _context.SaveChangesAsync();
+                return BadRequest("Cannot give negative points");
             }
+            
+            num.Points += points;
 
             //set message to notify driver of incremented points
-            var message = $"You have been awarded {points} points by {sponsorEmail}!";
+            var message = $"You have been awarded {points} points by {sponsorUser.Email}!";
 
             //add message to table
-            var messages = new Message() { AppUserId = driverId, Messages = message };
+            var messages = new Message()
+            {
+                AppUserId = driverId,
+                Messages = message
+            };
             _context.Add(messages);
+            
             await _context.SaveChangesAsync();
 
             return Ok();
         }
 
-        //Provide number of points to decrement and the driverId
-        //Points > 0, int
-        //driverId !NULL, string
+        /// Provide number of points to decrement and the driverId
+        /// Points > 0, int
+        /// driverId !NULL, string
         [HttpGet("takePoints")]
         public async Task<IActionResult> TakePoints(int points, string driverId)
         {
             var sponsorId = User.FindFirst(AppClaims.UserId)?.Value;
 
             //get sponsor email
-            var sponsorUser = await _context
-                .AppUser
+            var sponsorUser = await _context.AppUser
                 .SingleOrDefaultAsync(x => x.Id == sponsorId);
-            var sponsorEmail = sponsorUser.Email;
 
             //get current points for driver
             var num = await _context.Drivers
                 .SingleOrDefaultAsync(x => x.AppUserId == driverId);
 
             //decrement the points attribute
-            if (points > 0)
+            if (points <= 0)
             {
-                num.Points -= points;
-                await _context.SaveChangesAsync();
+                return BadRequest("Cannot remove negative points");
             }
+            num.Points -= points;
 
             //set message to notify driver of decremented points
-            var message = $"{sponsorEmail} has removed {points} points.";
+            var message = $"{sponsorUser.Email} has removed {points} points.";
 
             //add message to message table
-            var messages = new Message() { AppUserId = driverId, Messages = message };
+            var messages = new Message()
+            {
+                AppUserId = driverId, 
+                Messages = message
+            };
             _context.Add(messages);
+            
             await _context.SaveChangesAsync();
 
             return Ok();
@@ -153,16 +159,20 @@ namespace Group10.API.Controllers
             await _context.SaveChangesAsync();
 
             //get sponsor name
-            var sponsorName = await _context
-                .Sponsors
+            var sponsorName = await _context.Sponsors
                 .SingleOrDefaultAsync(x => x.AppUserId == sponsorId);
 
             //set message to notify driver of decremented points
             var message = $"{sponsorName} has claimed you as a driver!";
 
             //add message to message table
-            var messages = new Message() { AppUserId = driverId, Messages = message };
+            var messages = new Message()
+            {
+                AppUserId = driverId,
+                Messages = message
+            };
             _context.Add(messages);
+            
             await _context.SaveChangesAsync();
 
             return Ok("Driver added successfully!");
