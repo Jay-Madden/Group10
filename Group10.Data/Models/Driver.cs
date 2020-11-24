@@ -17,6 +17,6 @@ namespace Group10.Data.Models
 
         public List<Sponsor> Sponsors { get; set; } = new List<Sponsor>();
 
-        public List<Message> Messages { get; set; } = null!;
+        public List<Message> Messages { get; set; } = new List<Message>();
     }
 }

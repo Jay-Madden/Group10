@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace Group10.API.Enums
 {
-    public class AppRoles
+    public static class AppRoles
     {
-        public static string Admin => "Admin";
-        public static string Driver => "Driver";
-        public static string Sponsor => "Sponsor";
+        public const string Admin = "Admin";
+        public const string Driver = "Driver";
+        public const string Sponsor = "Sponsor";
     }
 }

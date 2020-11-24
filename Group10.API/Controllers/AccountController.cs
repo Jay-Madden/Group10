@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text.Json;
@@ -8,7 +7,6 @@ using Group10.API.Enums;
 using Group10.API.Models;
 using Group10.API.Security;
 using Group10.Data.Contexts;
-using Group10.API.Enums;
 using Group10.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -53,11 +51,12 @@ namespace Group10.API.Controllers
             {
                 return BadRequest("Specified UserId not found");
             }
+
             if (userRole is null)
             {
                 return BadRequest("UserRole not found");
             }
-            
+
             var dbUser = await _context.AppUser.SingleOrDefaultAsync(x => x.Id == userId);
             if (dbUser is null)
             {
@@ -66,25 +65,22 @@ namespace Group10.API.Controllers
 
             var user = new UserModel
             {
-                Name = dbUser.UserName,
-                Picture = dbUser.Picture,
-                Email = dbUser.Email,
-                Role = userRole
+                Name = dbUser.UserName, Picture = dbUser.Picture, Email = dbUser.Email, Role = userRole
             };
-            
-            return Ok(new{user});
+
+            return Ok(new {user});
         }
 
         [HttpGet("check")]
         [AllowAnonymous]
-        public async Task<IActionResult> CheckUser([FromQuery]string accessCode)
+        public async Task<IActionResult> CheckUser([FromQuery] string accessCode)
         {
             var googleInfo = await ValidateGoogleTokenAsync(accessCode);
             var user = await _context.AppUser.SingleOrDefaultAsync(x => x.AuthId == googleInfo.UserId);
 
             return Ok(user is not null);
         }
-        
+
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterAuthRequest registerRequest)
@@ -94,38 +90,49 @@ namespace Group10.API.Controllers
             {
                 return BadRequest("Invalid google access token");
             }
-            
+
             var newUser = new AppUser
             {
-                AuthId = userInfo.UserId, 
+                AuthId = userInfo.UserId,
                 UserName = registerRequest.GoogleUserInfo.name,
                 Email = registerRequest.GoogleUserInfo.email,
                 Picture = registerRequest.GoogleUserInfo.picture!
             };
-            
-            var foo = await _userManager.CreateAsync(newUser);
+
+            await _userManager.CreateAsync(newUser);
             await _userManager.AddClaimsAsync(newUser,
                 new[]
                 {
-                    new Claim(AppClaims.UserId, newUser.Id),
-                    new Claim(AppClaims.UserRole, registerRequest.UserRole)
+                    new Claim(AppClaims.UserId, newUser.Id), new Claim(AppClaims.UserRole, registerRequest.UserRole)
                 });
+
+            if (registerRequest.UserRole == AppRoles.Driver)
+            {
+                var driver = new Driver {AppUser = newUser, Points = 0};
+                _context.Add(driver);
+            }
+            else if (registerRequest.UserRole == AppRoles.Sponsor)
+            {
+                var sponsor = new Sponsor {AppUser = newUser};
+                _context.Add(sponsor);
+            }
+
+            await _context.SaveChangesAsync();
+
             return Ok();
         }
-        
 
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginAuthRequest loginRequest)
         {
-            
             GoogleApiTokenInfo tokenInfo = await ValidateGoogleTokenAsync(loginRequest.AccessToken);
 
             if (tokenInfo.UserId is null)
             {
                 return BadRequest("The access token was invalid");
             }
-            
+
             var user = await _context.AppUser
                 .SingleOrDefaultAsync(x => x.AuthId == tokenInfo.UserId);
 
@@ -136,23 +143,21 @@ namespace Group10.API.Controllers
 
             await _signInManager.SignInAsync(user, false);
             var claims = await _userManager.GetClaimsAsync(user);
-            
+
             var token = _jwtAuthManager.GenerateToken(claims, DateTime.Now);
-            
-            return Ok(new{ token });
+
+            return Ok(new {token});
         }
-
-
 
 
         private async Task<GoogleApiTokenInfo> ValidateGoogleTokenAsync(string accessToken)
         {
             using var client = _httpClientFactory.CreateClient();
-            
+
             var httpReq = await client.GetAsync($"{AccessTokenInfoUrl}{accessToken}");
             var jsonResp = await httpReq.Content.ReadAsStringAsync();
             var tokenInfo = JsonSerializer.Deserialize<GoogleApiTokenInfo>(jsonResp);
-            
+
             return tokenInfo!;
         }
     }

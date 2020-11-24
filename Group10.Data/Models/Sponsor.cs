@@ -12,7 +12,7 @@ namespace Group10.Data.Models
         public string AppUserId { get; set; } = null!;
         public AppUser AppUser { get; set; } = null!;
 
-        public int CatalogId { get; set; }
+        public int? CatalogId { get; set; }
         public Catalog Catalog { get; set; } = null!;
     }
 }
