@@ -12,7 +12,7 @@ namespace Group10.API.Models
         public ImagePagination? pagination { get; set; } 
     }
     public class ImageResult    {
-        public string? url_170x135 { get; set; } 
+        public string? url_570xN { get; set; } 
     }
 
     public class ImageParams    {

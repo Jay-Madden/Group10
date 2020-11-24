@@ -33,7 +33,7 @@ namespace Group10.API.Services
 
         public async Task<EtsyAPIimageInfo?> getImageAsync(int listingId)
         {
-            string imageUrL = $"https://openapi.etsy.com/v2/listings/{listingId}/images?api_key=";
+            string imageUrL = $"https://openapi.etsy.com/v2/listings/{listingId}/images?fields=url_570xN&api_key=";
 
             using var client = _httpClientFactory.CreateClient();
             var etsyResponse = await client.GetAsync($"{imageUrL}{etsyConnection}");

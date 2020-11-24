@@ -40,7 +40,7 @@ namespace Group10.API.Controllers
                     price = result.price,
                     description = result.description,
                     title = result.title, 
-                    image = imageUrl.results[0].url_170x135
+                    image = imageUrl.results[0].url_570xN
                 });
             }
 
