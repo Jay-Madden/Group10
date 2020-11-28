@@ -12,6 +12,7 @@ namespace Group10.Data.Models
         public string PriceUsd { get; set; } = null!;
         public string PricePts { get; set; } = null!;
         public string Description { get; set; } = null!;
+        public string imageurl { get; set; } = null!;
 
         public string imageurl { get; set; } = null!;
 
