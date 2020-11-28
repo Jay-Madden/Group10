@@ -13,6 +13,8 @@ namespace Group10.Data.Models
         public string PricePts { get; set; } = null!;
         public string Description { get; set; } = null!;
 
+        public string imageurl { get; set; } = null!;
+
         public List<Order> Orders { get; set; } = new List<Order>();
 
         public List<Catalog> Catalogs { get; set; } = new List<Catalog>();
