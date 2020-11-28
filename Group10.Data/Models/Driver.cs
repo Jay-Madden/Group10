@@ -10,13 +10,13 @@ namespace Group10.Data.Models
         public int Id { get; set; }
 
         public int Points { get; set; }
-        public List<Order> Orders { get; set; } = null!;
+        public List<Order> Orders { get; set; } = new List<Order>();
 
         public string AppUserId { get; set; } = null!;
         public AppUser AppUser { get; set; } = null!;
 
         public List<Sponsor> Sponsors { get; set; } = new List<Sponsor>();
 
-        public List<Message> Messages { get; set; } = new List<Message>();
+        public List<Message> Messages { get; set; } = null!;
     }
 }

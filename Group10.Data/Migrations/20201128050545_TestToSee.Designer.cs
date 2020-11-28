@@ -3,15 +3,17 @@ using System;
 using Group10.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Group10.Data.Migrations
 {
     [DbContext(typeof(Group10Context))]
-    partial class Group10ContextModelSnapshot : ModelSnapshot
+    [Migration("20201128050545_TestToSee")]
+    partial class TestToSee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

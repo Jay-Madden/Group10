@@ -3,36 +3,23 @@ using System;
 using Group10.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Group10.Data.Migrations
 {
     [DbContext(typeof(Group10Context))]
-    partial class Group10ContextModelSnapshot : ModelSnapshot
+    [Migration("20201124204211_UpdatedProductModel")]
+    partial class UpdatedProductModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityByDefaultColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.0-rc.1.20451.13");
-
-            modelBuilder.Entity("CatalogProduct", b =>
-                {
-                    b.Property<int>("CatalogsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("CatalogsId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("CatalogProduct");
-                });
 
             modelBuilder.Entity("DriverSponsor", b =>
                 {
@@ -128,6 +115,10 @@ namespace Group10.Data.Migrations
                         .HasColumnType("integer")
                         .UseIdentityByDefaultColumn();
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("Catalogs");
@@ -188,7 +179,7 @@ namespace Group10.Data.Migrations
                         .HasColumnType("integer")
                         .UseIdentityByDefaultColumn();
 
-                    b.Property<int?>("DriverId")
+                    b.Property<int>("DriverId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -204,6 +195,9 @@ namespace Group10.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .UseIdentityByDefaultColumn();
+
+                    b.Property<int>("CatalogId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -226,6 +220,8 @@ namespace Group10.Data.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CatalogId");
 
                     b.ToTable("Products");
                 });
@@ -398,21 +394,6 @@ namespace Group10.Data.Migrations
                     b.ToTable("OrderProduct");
                 });
 
-            modelBuilder.Entity("CatalogProduct", b =>
-                {
-                    b.HasOne("Group10.Data.Models.Catalog", null)
-                        .WithMany()
-                        .HasForeignKey("CatalogsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Group10.Data.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("DriverSponsor", b =>
                 {
                     b.HasOne("Group10.Data.Models.Driver", null)
@@ -458,9 +439,22 @@ namespace Group10.Data.Migrations
                 {
                     b.HasOne("Group10.Data.Models.Driver", "Driver")
                         .WithMany("Orders")
-                        .HasForeignKey("DriverId");
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Driver");
+                });
+
+            modelBuilder.Entity("Group10.Data.Models.Product", b =>
+                {
+                    b.HasOne("Group10.Data.Models.Catalog", "Catalog")
+                        .WithMany("Products")
+                        .HasForeignKey("CatalogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Catalog");
                 });
 
             modelBuilder.Entity("Group10.Data.Models.Sponsor", b =>
@@ -472,7 +466,7 @@ namespace Group10.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("Group10.Data.Models.Catalog", "Catalog")
-                        .WithMany()
+                        .WithMany("Sponsors")
                         .HasForeignKey("CatalogId");
 
                     b.Navigation("AppUser");
@@ -544,6 +538,13 @@ namespace Group10.Data.Migrations
                         .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Group10.Data.Models.Catalog", b =>
+                {
+                    b.Navigation("Products");
+
+                    b.Navigation("Sponsors");
                 });
 
             modelBuilder.Entity("Group10.Data.Models.Driver", b =>

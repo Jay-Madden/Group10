@@ -113,7 +113,9 @@ namespace Group10.API.Controllers
             }
             else if (registerRequest.UserRole == AppRoles.Sponsor)
             {
+                var catalog = new Catalog();
                 var sponsor = new Sponsor {AppUser = newUser};
+                sponsor.Catalog = catalog;
                 _context.Add(sponsor);
             }
 
@@ -121,6 +123,7 @@ namespace Group10.API.Controllers
 
             return Ok();
         }
+        
 
         [HttpPost("login")]
         [AllowAnonymous]
@@ -148,6 +151,8 @@ namespace Group10.API.Controllers
 
             return Ok(new {token});
         }
+
+
 
 
         private async Task<GoogleApiTokenInfo> ValidateGoogleTokenAsync(string accessToken)
