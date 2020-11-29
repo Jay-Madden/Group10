@@ -55,7 +55,7 @@ namespace Group10.API.Controllers
             {
                 if(list.description is null || list.id is null || list.title is null || list.price is null || list.image is null)
                 {
-                    return BadRequest("list is null");
+                    continue;
                 }
                 var product = new Product
                 {
@@ -75,13 +75,10 @@ namespace Group10.API.Controllers
                 {
                     _context.Add(product);
                 }
-
             }
-
             await _context.SaveChangesAsync();
-
-
-            return Ok(relevantInfo);
+            var products = await _context.Products.ToListAsync();
+            return Ok(new {products});
         }
     }
 }

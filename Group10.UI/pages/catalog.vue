@@ -29,19 +29,23 @@
                 <v-card class="ma-4" elevation="3">
                   <v-img
                     :max-height="hover ? 150 : 50"
-                    :src="item.image"
+                    max-width="300"
+                    :src="item.imageurl"
                     :class="{ 'on-hover': hover }"
                   ></v-img>
                 </v-card>
               </v-col>
+              <v-col cols="auto" align-self="center">
+                <v-btn @click="add(item)"> <v-icon>mdi-plus</v-icon> </v-btn>
+              </v-col>
               <v-col align-self="center">
-                {{ item.title }}
+                {{ item.name }}
               </v-col>
               <v-spacer />
               <v-card class="ma-2 pa-4">
                 <v-container fluid fill-height>
                   <v-row justify="center" align="center">
-                    {{ Math.round(item.price) }}
+                    {{ item.pricePts }}
                   </v-row>
                 </v-container>
               </v-card>
@@ -61,7 +65,31 @@ export default {
     };
   },
   async fetch() {
-    this.items = await fetch('api/catalog/info').then(res => res.json());
+    const token = this.$auth.getToken(this.$auth.strategy.name).substr(7);
+    this.$http.setToken(token, 'Bearer');
+    if (this.$auth.user.role === 'Sponsor') {
+      this.items = (
+        await this.$http.get('api/catalog/info').then(res => res.json())
+      ).products;
+    } else {
+      this.items = (
+        await this.$http
+          .get('api/driver/get_sponsor(s)_catalog')
+          .then(res => res.json())
+      ).products;
+    }
+  },
+  methods: {
+    async add(item) {
+      if (this.$auth.user.role === 'Sponsor') {
+        await this.$http.put('api/sponsor/add_to_catalog', {
+          ProductId: item.productId,
+        });
+      } else {
+        this.$store.commit('cart/add', item);
+      }
+      this.items = this.items.filter(i => i.productId !== item.productId);
+    },
   },
 };
 </script>

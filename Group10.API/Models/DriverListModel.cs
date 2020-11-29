@@ -7,7 +7,6 @@ namespace Group10.API.Models
 {
     public class DriverListModel
     {
-        public List<string> DriverIds { get; set; } = new List<string>();
-
+        public string email { get; set; } = null!;
     }
 }

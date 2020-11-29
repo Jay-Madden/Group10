@@ -37,39 +37,34 @@ namespace Group10.API.Controllers
             var drivers = await _context.Sponsors
                 .Where(x => x.AppUserId == userId)
                 .SelectMany(x => x.Drivers)
+                .Include(e => e.AppUser)
                 .ToListAsync();
 
-            //create new model and populate it
-            var model = new DriverListModel();
-            for (int i = 0; i < drivers.Count(); i++)
-            {
-                var temp = drivers[i];
-                model.DriverIds.Add(temp.AppUserId);
-            }
-
             //return list of current drivers for current sponsor
-            return Ok(model);
+            return Ok(new {drivers});
         }
 
-        //Returns a list of driver Ids that were claimed by a currently logged in sponsor.
         [HttpGet("all_drivers")]
         public async Task<IActionResult> GetAllDrivers()
         {
-            
+            var userId = User.FindFirst(AppClaims.UserId)?.Value;
             //query database for list of all drivers 
-            var drivers = await _context.Drivers
+            /*j
+            var dr = await _context.Drivers
+                .SelectMany(s => s.Sponsors)
+                .Where(z => z.Drivers)
+                .Select(x => x.AppUser.Email)
                 .ToListAsync();
+                */
 
-            //create new model and populate it
-            var model = new DriverListModel();
-            for (int i = 0; i < drivers.Count(); i++)
-            {
-                var temp = drivers[i];
-                model.DriverIds.Add(temp.AppUserId);
-            }
-
-            //return list of current drivers for current sponsor
-            return Ok(model);
+            var drivers = await _context.Drivers
+                .Where(x => !x.Sponsors
+                    .Select(c => c.AppUserId)
+                    .Contains(userId))
+                .Select(d => new {d.AppUser.Email, d.AppUserId})
+                .ToListAsync();
+            
+            return Ok(new {drivers});
         }
 
         //Provide number of points to increment and the driverId
@@ -146,7 +141,7 @@ namespace Group10.API.Controllers
         }
 
         [HttpPut("claim_driver")]
-        public async Task<IActionResult> ClaimDriver(string driverId)
+        public async Task<IActionResult> ClaimDriver([FromQuery]string driverId)
         {
             //get sponsor Id
             var sponsorId = User.FindFirst(AppClaims.UserId)?.Value;
@@ -189,6 +184,54 @@ namespace Group10.API.Controllers
             return Ok("Driver added successfully!");
         }
 
+        [HttpPut("remove_driver")]
+        public async Task<IActionResult> RemoveDriver([FromQuery]string driverId)
+        {
+            //get sponsor Id
+            var sponsorId = User.FindFirst(AppClaims.UserId)?.Value;
+
+            //get the driver
+            var driver = await _context.Drivers.Include(s => s.Sponsors).FirstOrDefaultAsync(x => x.AppUserId == driverId);
+            if (driver is null)
+            {
+                return BadRequest("Driver does not exist!");
+            }
+
+            //get the sponsor
+            var sponsorList = await _context.Sponsors
+                .Include(s => s.Drivers)
+                .FirstOrDefaultAsync(x => x.AppUserId == sponsorId);
+            if (sponsorList is null)
+            {
+                return BadRequest("Sponsor does not exist!");
+            }
+
+            var drivers = await _context.Sponsors
+                .SelectMany(x => x.Drivers)
+                .ToListAsync();
+
+            sponsorList.Drivers.Remove(driver);
+
+            //save changes
+            //_context.Add(sponsorList);
+            await _context.SaveChangesAsync();
+
+            //get sponsor email
+            var sponsorUser = await _context.AppUser
+                .SingleOrDefaultAsync(x => x.Id == sponsorId);
+            
+            var sponsorEmail = sponsorUser.Email;
+
+            //set message to notify driver of decremented points
+            var message = $"{sponsorEmail} has removed you as a driver!";
+
+            //add message to message table
+            var messages = new Message() { AppUserId = driverId, Messages = message };
+            _context.Add(messages);
+            await _context.SaveChangesAsync();
+
+            return Ok("Driver added successfully!");
+        }
         [HttpGet("getNotifications")]
         public async Task<IActionResult> GetNotifications()
         {
@@ -196,9 +239,10 @@ namespace Group10.API.Controllers
             var userId = User.FindFirst(AppClaims.UserId)?.Value;
 
             //query db for list of notifications for current driver
-            var driverNotifications = await (from messages in _context.Messages
-                                             where messages.AppUserId == userId
-                                             select messages.Messages).ToListAsync();
+            var driverNotifications = await _context.Messages
+                .Where(m => m.AppUserId == userId)
+                .Select(m => m.Messages)
+                .ToListAsync();
 
             var model = new DriverNotificationModel() { Notifications = driverNotifications };
 

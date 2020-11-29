@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Group10.API.Models;
@@ -17,7 +18,8 @@ namespace Group10.API.Services
         public EtsyAPIService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
-            etsyConnection = configuration["EtsyAPIConsumerKey"];
+            etsyConnection = Environment.GetEnvironmentVariable("ETSY_API_KEY")??
+                             configuration["EtsyAPIConsumerKey"];
         }
         
         public async Task<EtsyAPIListingInfo?> getListingAsync()

@@ -7,10 +7,6 @@ namespace Group10.API.Models
 {
     public class ListOfProductsModel
     {
-
         public List<string> Products { get; set; } = null!;
-
-        public string driverId { get; set; } = null!;
-
     }
 }

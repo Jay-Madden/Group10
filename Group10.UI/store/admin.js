@@ -1,9 +1,9 @@
 export const state = () => ({
-  counter: 0,
+  isAdmin: false,
 });
 
 export const mutations = {
-  increment(state) {
-    state.counter++;
+  set(state) {
+    state.isAdmin = true;
   },
 };

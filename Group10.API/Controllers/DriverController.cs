@@ -34,44 +34,27 @@ namespace Group10.API.Controllers
             //get user Id
             var userId = User.FindFirst(AppClaims.UserId)?.Value;
 
-            //query database for list of drivers associated with current driver
+            //query database for list of sponsors associated with current driver
             var sponsors = await _context.Drivers
                 .Where(x => x.AppUserId == userId)
                 .SelectMany(x => x.Sponsors)
+                .Select(s => new {s.AppUserId, s.AppUser.Email})
                 .ToListAsync();
 
-            //create new model and populate it
-            var model = new SponsorListModel();
-            for (int i = 0; i < sponsors.Count(); i++)
-            {
-                var temp = sponsors[i];
-                model.Sponsors.Add(temp.AppUserId);
-            }
-
             //return list of current drivers for current sponsor
-            return Ok(model);
+            return Ok(new {sponsors});
         }
 
         [HttpGet("all_sponsors")]
         public async Task<IActionResult> GetAllSponsors()
         {
-            //get user Id
-            var userId = User.FindFirst(AppClaims.UserId)?.Value;
 
             //query database for list all available sponsors
             var sponsors = await _context.Sponsors
+                .Select(x => new { x.AppUserId, x.AppUser.Email})
                 .ToListAsync();
-
-            //create new model and populate it
-            var model = new DriverListModel();
-            for (int i = 0; i < sponsors.Count(); i++)
-            {
-                var temp = sponsors[i];
-                model.DriverIds.Add(temp.AppUserId);
-            }
-
-            //return list of current drivers for current sponsor
-            return Ok(model);
+            
+            return Ok(new {sponsors});
         }
 
         [HttpGet("points")]
@@ -97,9 +80,10 @@ namespace Group10.API.Controllers
             var userId = User.FindFirst(AppClaims.UserId)?.Value;
 
             //query db for list of notifications for current driver
-            var driverNotifications = await (from messages in _context.Messages
-                                             where messages.AppUserId == userId
-                                             select messages.Messages).ToListAsync();
+            var driverNotifications = await (_context.Messages
+                .Where(messages => messages.AppUserId == userId)
+                .Select(messages => messages.Messages))
+                .ToListAsync();
 
             var model = new DriverNotificationModel() { Notifications = driverNotifications };
 
@@ -108,7 +92,7 @@ namespace Group10.API.Controllers
         }
 
         [HttpPut("petition_sponsor")]
-        public async Task<IActionResult> PetitionSponsor(string sponsorId)
+        public async Task<IActionResult> PetitionSponsor([FromQuery] string sponsorId)
         {
             //get user email
             var userId = User.FindFirst(AppClaims.UserId)?.Value;
@@ -134,49 +118,16 @@ namespace Group10.API.Controllers
         [HttpGet("get_sponsor(s)_catalog")]
         public async Task<IActionResult> DriverCatalog()
         {
-
             //get user Id
             var userId = User.FindFirst(AppClaims.UserId)?.Value;
 
-            //query database for list of sponsors associated with current driver
-            var sponsors = await _context.Drivers
+            var items = await _context.Drivers
                 .Where(x => x.AppUserId == userId)
                 .SelectMany(x => x.Sponsors)
+                .SelectMany(x => x.Catalog.Products)
                 .ToListAsync();
-
-            //create new model and populate it
-            var model = new SponsorListModel();
-            for (int i = 0; i < sponsors.Count(); i++)
-            {
-                var temp = sponsors[i];
-                model.Sponsors.Add(temp.AppUserId);
-            }
-
-            var sponsorList = model.Sponsors;
-            var driverCatalog = new DriverCatalogModel();
-
-            for(int i = 0; i < sponsorList.Count(); i++)
-            {
-                var AppUserId = sponsorList[i];
-
-                var sponsor = await _context
-                    .Sponsors
-                    .SingleOrDefaultAsync(x => x.AppUserId == AppUserId);
-
-                var products = await _context.Catalogs
-                .Where(x => x.Id == sponsor.CatalogId)
-                .SelectMany(x => x.Products)
-                .ToListAsync();
-
-                for(int j = 0; j < products.Count(); j++)
-                {
-                    driverCatalog.Products.Add(products[j]);
-                }
-                
-            }
-
-            return Ok(driverCatalog);
             
+            return Ok(new {products=items});
         }
 
         [HttpGet("get_orders")]
@@ -192,7 +143,7 @@ namespace Group10.API.Controllers
 
             //query database for list of sponsors associated with current driver
             var order = await _context.Orders
-                .Where(x => x.Id == driver.Id)
+                .Where(x => x.DriverId == driver.Id)
                 .SelectMany(x => x.Products)
                 .ToListAsync();
 

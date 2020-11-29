@@ -114,8 +114,7 @@ namespace Group10.API.Controllers
             else if (registerRequest.UserRole == AppRoles.Sponsor)
             {
                 var catalog = new Catalog();
-                var sponsor = new Sponsor {AppUser = newUser};
-                sponsor.Catalog = catalog;
+                var sponsor = new Sponsor {AppUser = newUser, Catalog = catalog};
                 _context.Add(sponsor);
             }
 

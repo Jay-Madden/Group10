@@ -29,13 +29,13 @@ namespace Group10.API.Controllers
         [HttpPost("purchase_cart_order")]
         public async Task<IActionResult> PayForItems([FromBody] ListOfProductsModel listofproducts)
         {
+            var driverId = User.FindFirst(AppClaims.UserId)?.Value;
 
             var product = new Product();
             var products = new List<Product>();
             var points = 0;
 
             var productIds = listofproducts.Products;
-            var driverId = listofproducts.driverId;
 
             //grab each product, query database, sum points
             for(int i = 0; i < productIds.Count(); i++)
@@ -47,7 +47,7 @@ namespace Group10.API.Controllers
 
                 products.Add(product);
 
-                points += int.Parse(product.PricePts);
+                points += (int)double.Parse(product.PricePts);
             }
             
             //get current points for driver
@@ -63,7 +63,7 @@ namespace Group10.API.Controllers
             }
             if(points > driver.Points)
             {
-                return BadRequest("Insuficient points to finalize purchase");
+                return BadRequest("Insufficient points to finalize purchase");
             }
 
 

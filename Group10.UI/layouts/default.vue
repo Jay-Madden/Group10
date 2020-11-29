@@ -36,6 +36,18 @@
             <v-list-item-title> Catalog </v-list-item-title>
           </v-list-item>
 
+          <v-list-item
+            v-if="this.$auth.user.role === 'Driver'"
+            block
+            link
+            to="/cart"
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-cart</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title> Cart </v-list-item-title>
+          </v-list-item>
+
           <v-list-item block link to="/settings">
             <v-list-item-icon>
               <v-icon>mdi-cog</v-icon>
